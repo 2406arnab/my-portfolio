@@ -7,7 +7,7 @@ import { GrTechnology } from "react-icons/gr";
 import {
     SiAngular,
     SiMongodb,
-    SiTailwindcss, SiTypescript
+    SiTailwindcss, SiTypescript, SiNextdotjs
 } from 'react-icons/si';
 
 export default function Skills() {
@@ -25,6 +25,7 @@ export default function Skills() {
         {
             label: "Backend",
             skills: [
+                { icon: <SiNextdotjs />, name: "Next.js" },
                 { icon: <DiNodejsSmall />, name: "Node.js" },
             ],
         },
