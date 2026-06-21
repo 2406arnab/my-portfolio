@@ -10,6 +10,7 @@ import Skills from "./sections/Skills";
 import CustomCursor from "./components/CustomCursor";
 import { useState } from "react";
 import IntroAnimation from "./components/IntroAnimation";
+import MusicPlayer from "./sections/MusicPlayer";
 
 export default function App() {
   const [introDone, setIntroDone] = useState(false);
@@ -24,6 +25,7 @@ export default function App() {
             <CustomCursor />
             {/* <ParticlesBackground /> */}
             <NavBar />
+            <MusicPlayer />
             <Home />
             <About />
             <Skills />
