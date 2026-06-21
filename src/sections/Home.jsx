@@ -1676,6 +1676,8 @@ const Home = () => {
                                 </motion.a>
                             </motion.div>
 
+                            <TechMarquee />
+
                             {/* SOCIALS */}
                             <motion.div
                                 className='mt-10 flex gap-5 text-2xl md:text-3xl justify-center lg:justify-start'
