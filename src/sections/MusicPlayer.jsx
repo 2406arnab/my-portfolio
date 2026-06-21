@@ -1,23 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaVolumeDown } from "react-icons/fa";
 
-// Drop your audio file in the `public` folder (e.g. public/bg-music.mp3)
-// and point this at it with a root-relative path — same pattern you're
-// already using for the resume PDF.
 const musicSrc = "/bg-music.mp3";
-
 const VOLUME_KEY = "site-music-volume";
 
 export default function MusicPlayer() {
     const audioRef = useRef(null);
     const [playing, setPlaying] = useState(false);
     const [showSlider, setShowSlider] = useState(false);
+
     const [volume, setVolume] = useState(() => {
-        const saved = typeof window !== 'undefined' ? localStorage.getItem(VOLUME_KEY) : null;
+        const saved = typeof window !== 'undefined'
+            ? localStorage.getItem(VOLUME_KEY)
+            : null;
         return saved !== null ? parseFloat(saved) : 0.4;
     });
 
-    // Keep the <audio> element's volume in sync, and remember the user's choice
     useEffect(() => {
         if (audioRef.current) {
             audioRef.current.volume = volume;
@@ -39,7 +37,8 @@ export default function MusicPlayer() {
         }
     };
 
-    const VolumeIcon = volume === 0 ? FaVolumeMute : volume < 0.5 ? FaVolumeDown : FaVolumeUp;
+    const VolumeIcon =
+        volume === 0 ? FaVolumeMute : volume < 0.5 ? FaVolumeDown : FaVolumeUp;
 
     return (
         <>
@@ -58,10 +57,13 @@ export default function MusicPlayer() {
                     borderRadius: '999px',
                     padding: '6px',
                     backdropFilter: 'blur(10px)',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.45)',
+                    boxShadow: playing
+                        ? '0 0 25px rgba(28,216,210,0.6), 0 0 60px rgba(28,216,210,0.25)'
+                        : '0 8px 24px rgba(0,0,0,0.45)',
+                    transition: 'box-shadow 0.3s ease',
                 }}
             >
-                {/* Play / Pause — the actual trigger */}
+                {/* PLAY BUTTON */}
                 <button
                     onClick={togglePlay}
                     aria-label={playing ? "Pause music" : "Play music"}
@@ -96,7 +98,18 @@ export default function MusicPlayer() {
                     {playing ? <FaPause size={14} /> : <FaPlay size={13} style={{ marginLeft: '2px' }} />}
                 </button>
 
-                {/* Volume icon — tap to reveal the slider */}
+                {/* CENTER WAVE */}
+                {playing && (
+                    <div className="music-wave">
+                        <span />
+                        <span />
+                        <span />
+                        <span />
+                        <span />
+                    </div>
+                )}
+
+                {/* VOLUME BUTTON */}
                 <button
                     onClick={() => setShowSlider((v) => !v)}
                     aria-label="Volume"
@@ -117,7 +130,7 @@ export default function MusicPlayer() {
                     <VolumeIcon size={15} />
                 </button>
 
-                {/* Volume slider — collapses to 0 width when closed */}
+                {/* SLIDER */}
                 <div
                     style={{
                         width: showSlider ? '90px' : '0px',
@@ -141,17 +154,52 @@ export default function MusicPlayer() {
                 </div>
             </div>
 
+            {/* STYLES */}
             <style>{`
                 @keyframes musicPulse {
                     0% { transform: scale(1); opacity: 0.6; }
                     100% { transform: scale(1.5); opacity: 0; }
                 }
+
+                .music-wave {
+                    display: flex;
+                    align-items: flex-end;
+                    gap: 3px;
+                    height: 18px;
+                    margin: 0 10px;
+                }
+
+                .music-wave span {
+                    width: 3px;
+                    background: #1cd8d2;
+                    border-radius: 3px;
+                    animation: waveAnim 1s infinite ease-in-out;
+                }
+
+                .music-wave span:nth-child(1) { height: 6px; animation-delay: 0s; }
+                .music-wave span:nth-child(2) { height: 12px; animation-delay: 0.1s; }
+                .music-wave span:nth-child(3) { height: 8px; animation-delay: 0.2s; }
+                .music-wave span:nth-child(4) { height: 14px; animation-delay: 0.3s; }
+                .music-wave span:nth-child(5) { height: 9px; animation-delay: 0.4s; }
+
+                @keyframes waveAnim {
+                    0%, 100% {
+                        transform: scaleY(0.4);
+                        opacity: 0.5;
+                    }
+                    50% {
+                        transform: scaleY(1);
+                        opacity: 1;
+                    }
+                }
+
                 input[type="range"] {
                     -webkit-appearance: none;
                     height: 3px;
                     background: rgba(255,255,255,0.15);
                     border-radius: 999px;
                 }
+
                 input[type="range"]::-webkit-slider-thumb {
                     -webkit-appearance: none;
                     width: 11px;
@@ -161,6 +209,7 @@ export default function MusicPlayer() {
                     cursor: pointer;
                     box-shadow: 0 0 6px rgba(28,216,210,0.6);
                 }
+
                 input[type="range"]::-moz-range-thumb {
                     width: 11px;
                     height: 11px;
